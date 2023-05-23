@@ -1,0 +1,68 @@
+/**
+    O código a baixo, irá implementar o padrão do Adapter (padrão estrutural), para permitir que os
+    objetos de uma classe, possam ser utilizados em um conjunto de objetos de outras classes.
+ */
+
+// Definição das classes RoundHole e RoundPeg com interfaces compatíveis.
+class RoundHole {
+  constructor(radius) {
+    this.radius = radius; // Inicializa o raio do buraco redondo.
+  }
+
+  getRadius() {
+    return this.radius; // Retorna o raio do buraco redondo.
+  }
+
+  // Verifica se um pino redondo cabe no buraco redondo.
+  fits(peg) {
+    return this.getRadius() >= peg.getRadius();
+  }
+}
+
+class RoundPeg {
+  constructor(radius) {
+    this.radius = radius; // Inicializa o raio do pino redondo.
+  }
+
+  getRadius() {
+    return this.radius; // Retorna o raio do pino redondo.
+  }
+}
+
+// Definição da classe SquarePeg, que representa um pino quadrado incompatível.
+class SquarePeg {
+  constructor(width) {
+    this.width = width; // Inicializa a largura do pino quadrado.
+  }
+
+  getWidth() {
+    return this.width; // Retorna a largura do pino quadrado.
+  }
+}
+
+// Classe SquarePegAdapter atua como um adaptador, permitindo encaixar pinos quadrados em buracos redondos.
+class SquarePegAdapter extends RoundPeg {
+  constructor(peg) {
+    super(0); // Chama o construtor da superclasse RoundPeg com um raio fictício de 0.
+    this.peg = peg; // Armazena a instância do pino quadrado a ser adaptado.
+  }
+
+  // Calcula o raio necessário para que o pino quadrado caiba no buraco redondo.
+  getRadius() {
+    return this.peg.getWidth() * Math.sqrt(2) / 2;
+  }
+}
+
+// Código do cliente que utiliza as classes definidas acima.
+let hole = new RoundHole(5); // Cria um buraco redondo com raio 5.
+let rpeg = new RoundPeg(5); // Cria um pino redondo com raio 5.
+
+hole.fits(rpeg); // Verifica se o pino redondo cabe no buraco redondo. Deve retornar true.
+
+let smallSqpeg = new SquarePeg(10); // Cria um pino quadrado com largura 10.
+let smallSqpegAdapter = new SquarePegAdapter(smallSqpeg); // Cria um adaptador para o pino quadrado.
+hole.fits(smallSqpegAdapter); // Verifica se o pino quadrado adaptado cabe no buraco redondo. Retorna true.
+
+let largeSqpeg = new SquarePeg(15); // Cria um pino quadrado com largura 15.
+let largeSqpegAdapter = new SquarePegAdapter(largeSqpeg); // Cria um adaptador para o pino quadrado.
+hole.fits(largeSqpegAdapter); // Verifica se o pino quadrado adaptado cabe no buraco redondo. Retorna false.
